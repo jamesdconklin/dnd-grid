@@ -41,7 +41,6 @@ function getItemStyles(props) {
 
 class GridDragLayer extends PureComponent {
   renderItem(type, item) {
-    debugger;
     switch(type) {
       case ItemTypes.Draggable:
         return item.children;
@@ -56,7 +55,6 @@ class GridDragLayer extends PureComponent {
     if (!isDragging) {
       return null;
     }
-    debugger;
 
     return (
       <div style={layerStyles}>
