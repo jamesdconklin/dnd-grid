@@ -1,13 +1,13 @@
-var path = require("path");
+var path = require('path');
 
 module.exports = {
   context: __dirname,
-  entry: "./src/index.js",
+  entry: './src/index.js',
   output: {
-    library: "dndGrid",
-    libraryTarget: "umd",
+    library: 'dndGrid',
+    libraryTarget: 'umd',
     path: path.join(__dirname, 'dist'),
-    filename: "dndGrid.js"
+    filename: 'dndGrid.js'
   },
   module: {
     loaders: [
@@ -25,10 +25,12 @@ module.exports = {
   resolve: {
     root: __dirname,
     alias: {
-      "draggableWrapper": 'src/draggableWrapper.js',
-      "dropGrid": 'src/dropGrid.js',
-      "renderedGrid": 'src/renderedGrid.jsx',
+      'Draggable': 'src/Draggable.js',
+      'RenderedGrid': 'src/RenderedGrid.js',
+      'Grid': 'src/Grid.js',
+      'ItemTypes': 'src/ItemTypes.js',
+      'snapToGrid': 'src/snapToGrid.js',
     },
-    extensions: ["", ".js", ".jsx" ]
+    extensions: ['', '.js', '.jsx' ]
   }
 };

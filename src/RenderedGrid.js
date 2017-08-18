@@ -9,8 +9,8 @@
 import React, { PureComponent } from 'react';
 
 const DEFAULT_STYLE = {
-  width: "100%",
-  height: "100%",
+  width: '100%',
+  height: '100%',
   lineWidth: 1,
   interval: 40,
   color: 'rgba(0,0,0,1)',
@@ -39,7 +39,7 @@ class RenderedGrid extends PureComponent {
 
     //Validate Color Prop
     if (this.props.color) {
-      const dummy = document.createElement("div");
+      const dummy = document.createElement('div');
       dummy.style.color = this.props.color;
       if (dummy.style.color) {
         //Then the color was accepted.
@@ -60,9 +60,10 @@ class RenderedGrid extends PureComponent {
     return {
       backgroundImage: gradientDefinition,
       backgroundSize: `${mergedStyle.interval}px ${mergedStyle.interval}px`,
-      overflow: "hidden",
+      overflow: 'hidden',
       width: mergedStyle.width,
       height: mergedStyle.height,
+      position: 'absolute',
     };
   }
 

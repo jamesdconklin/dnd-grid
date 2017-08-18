@@ -24,6 +24,7 @@ module.exports = {
     root: __dirname,
     alias: {
       "dndGrid": "../dist/dndGrid.js",
+      "Demo": "./Demo.js",
     },
     extensions: ["", ".js", ".jsx" ],
     modules:[

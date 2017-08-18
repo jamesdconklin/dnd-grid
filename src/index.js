@@ -1,3 +1,3 @@
-import RenderedGrid from 'renderedGrid';
+import Grid from 'Grid';
 
-export default RenderedGrid;
+export default Grid;
