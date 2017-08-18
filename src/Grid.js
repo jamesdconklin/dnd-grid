@@ -9,6 +9,7 @@ import GridDragLayer from 'GridDragLayer';
 const baseStyles = {
   position: 'relative',
   border: '1px solid red',
+  overflow: 'hidden',
 };
 
 const draggableTarget = {
@@ -74,8 +75,8 @@ class Grid extends PureComponent {
 
     const style = Object.assign({}, baseStyles, { width, height });
     return connectDropTarget(
-      <div>
-        <div style={style}>
+      <div style={style}>
+        <div>
           {
             items.map(item => this.renderItem(item))
           }

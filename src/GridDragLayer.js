@@ -57,7 +57,7 @@ class GridDragLayer extends PureComponent {
     }
 
     return (
-      <div style={layerStyles}>
+      <div id="fooba" style={layerStyles}>
         <div style={getItemStyles(this.props)}>
           {this.renderItem(itemType, item)}
         </div>
