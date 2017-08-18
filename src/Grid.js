@@ -4,6 +4,7 @@ import { DropTarget } from 'react-dnd';
 import ItemTypes from 'ItemTypes';
 import Draggable from 'Draggable';
 import snapToGrid from 'snapToGrid';
+import GridDragLayer from 'GridDragLayer';
 
 const baseStyles = {
   position: 'relative',
@@ -29,9 +30,8 @@ const draggableTarget = {
 class Grid extends PureComponent {
   constructor(props) {
     super(props);
-
-    const items = props.children.map(child => (
-      { top: 0, left: 0, id: child.key, child}
+    const items = React.Children.map(props.children, child => (
+      { top: 0, left: 0, id: child.key, child }
     ));
 
     this.state = { items };
@@ -42,12 +42,10 @@ class Grid extends PureComponent {
   }
 
   moveBox(id, left, top) {
-    console.log({left, top});
     const index = this.getIndexById(id);
 
     // Shallow copy.
     const newItem = Object.assign({}, this.state.items[index], { left, top });
-    console.log(newItem);
     const items = [];
 
     // Copy over items, ignoring the moved item and appending it last.
@@ -59,7 +57,6 @@ class Grid extends PureComponent {
     items.push(newItem);
 
     this.setState({ items });
-    console.log(this.state.items);
   }
 
   renderItem(item) {
@@ -77,10 +74,13 @@ class Grid extends PureComponent {
 
     const style = Object.assign({}, baseStyles, { width, height });
     return connectDropTarget(
-      <div style={style}>
-        {
-          items.map(item => this.renderItem(item))
-        }
+      <div>
+        <div style={style}>
+          {
+            items.map(item => this.renderItem(item))
+          }
+        </div>
+        <GridDragLayer snapToGrid={false} />
       </div>
     );
   }

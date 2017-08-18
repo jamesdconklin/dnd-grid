@@ -28,6 +28,7 @@ module.exports = {
       'Draggable': 'src/Draggable.js',
       'RenderedGrid': 'src/RenderedGrid.js',
       'Grid': 'src/Grid.js',
+      'GridDragLayer': 'src/GridDragLayer.js',
       'ItemTypes': 'src/ItemTypes.js',
       'snapToGrid': 'src/snapToGrid.js',
     },
