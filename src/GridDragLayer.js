@@ -35,7 +35,6 @@ function getItemStyles(props) {
     x += initialOffset.x;
     y += initialOffset.y;
     [x, y] = normalize(x, y, props);
-    console.log('returned', x,y);
   }
 
   const transform = `translate(${x}px, ${y}px)`;

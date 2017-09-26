@@ -105,7 +105,8 @@ class Grid extends PureComponent {
 
   render() {
     const {
-      connectDropTarget, height, width, snap, interval, lineWidth, color, showGrid
+      connectDropTarget, height, width, snap, interval, lineWidth, color,
+      showGrid
     } = this.props;
 
     const gridProps = { interval, color, lineWidth, snap, width, height };

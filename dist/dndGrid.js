@@ -14165,7 +14165,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 213 */
 /***/ (function(module, exports) {
 
-	'use strict';
+	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -14173,20 +14173,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.normalize = normalize;
 	exports.default = snapToGrid;
 	/*
-	  Helper for coercing placement to match grid lines.
-	  The maxing and mining prevents snapping off the grid.
+	  Helpers for coercing placement to match grid lines.
 	*/
 	
 	function normalize(x, y, props) {
-	  console.log('in', x, y, props);
 	  var width = props.width,
 	      height = props.height,
 	      interval = props.interval,
 	      lineWidth = props.lineWidth;
 	
-	  var offset = Math.floor(lineWidth / 2);
-	  var normalX = Math.max(offset, Math.min(x, width - interval));
-	  var normalY = Math.max(offset, Math.min(y, height - interval));
+	  var offsetX = x % interval;
+	  var offsetY = y % interval;
+	  var normalX = x;
+	  var normalY = y;
+	  if (x >= width) {
+	    normalX = Math.max(0, Math.min(x, width - interval)) + offsetX;
+	  }
+	  if (y >= height) {
+	    normalY = Math.max(0, Math.min(y, height - interval)) + offsetY;
+	  }
 	  return [normalX, normalY];
 	}
 	
@@ -14286,8 +14291,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    x = _normalize2[0];
 	    y = _normalize2[1];
-	
-	    console.log('returned', x, y);
 	  }
 	
 	  var transform = 'translate(' + x + 'px, ' + y + 'px)';
