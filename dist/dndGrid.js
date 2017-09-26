@@ -80,7 +80,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }(); /*
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           Top-Level component for the dnd-grid component. Takes components as
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           children and places and moves them within a props-defined grid.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           Props:
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             lineWidth, interval, color, width, height: See RenderedGrid.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             showGrid: include RendereGrid if true.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             snap: Snaps child components to nearest grid lines at component's
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               left and top edges.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         */
 	
 	var _react = __webpack_require__(2);
 	
@@ -92,19 +102,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _reactDnd = __webpack_require__(40);
 	
-	var _ItemTypes = __webpack_require__(178);
+	var _reactAddonsUpdate = __webpack_require__(178);
+	
+	var _reactAddonsUpdate2 = _interopRequireDefault(_reactAddonsUpdate);
+	
+	var _ItemTypes = __webpack_require__(179);
 	
 	var _ItemTypes2 = _interopRequireDefault(_ItemTypes);
 	
-	var _Draggable = __webpack_require__(179);
+	var _Draggable = __webpack_require__(180);
 	
 	var _Draggable2 = _interopRequireDefault(_Draggable);
 	
-	var _snapToGrid2 = __webpack_require__(212);
+	var _snapToGrid3 = __webpack_require__(213);
 	
-	var _snapToGrid3 = _interopRequireDefault(_snapToGrid2);
+	var _snapToGrid4 = _interopRequireDefault(_snapToGrid3);
+	
+	var _GridDragLayer = __webpack_require__(214);
+	
+	var _GridDragLayer2 = _interopRequireDefault(_GridDragLayer);
+	
+	var _RenderedGrid = __webpack_require__(215);
+	
+	var _RenderedGrid2 = _interopRequireDefault(_RenderedGrid);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
@@ -114,22 +138,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var baseStyles = {
 	  position: 'relative',
-	  border: '1px solid red'
+	  border: '1px solid red',
+	  overflow: 'hidden'
 	};
 	
 	var draggableTarget = {
 	  drop: function drop(props, monitor, component) {
+	
 	    var delta = monitor.getDifferenceFromInitialOffset();
 	    var item = monitor.getItem();
 	
 	    var left = Math.round(item.left + delta.x);
 	    var top = Math.round(item.top + delta.y);
 	
-	    if (props.snapToGrid) {
-	      var _snapToGrid = _slicedToArray(_snapToGrid3.default, 2);
+	    //This clalback is not automagically grabbing the default props.
+	    var mergedProps = Object.assign({}, Grid.defaultProps, props);
 	
-	      left = _snapToGrid[0];
-	      top = _snapToGrid[1];
+	    if (mergedProps.snap) {
+	      var _snapToGrid = (0, _snapToGrid4.default)(left, top, mergedProps);
+	
+	      var _snapToGrid2 = _slicedToArray(_snapToGrid, 2);
+	
+	      left = _snapToGrid2[0];
+	      top = _snapToGrid2[1];
 	    }
 	
 	    component.moveBox(item.id, left, top);
@@ -144,7 +175,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	    var _this = _possibleConstructorReturn(this, (Grid.__proto__ || Object.getPrototypeOf(Grid)).call(this, props));
 	
-	    var items = props.children.map(function (child) {
+	    var items = _react2.default.Children.map(props.children, function (child) {
 	      return { top: 0, left: 0, id: child.key, child: child };
 	    });
 	
@@ -162,24 +193,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'moveBox',
 	    value: function moveBox(id, left, top) {
-	      console.log({ left: left, top: top });
 	      var index = this.getIndexById(id);
+	      var items = this.state.items;
+	      var newItem = Object.assign({}, items[index], { left: left, top: top });
+	      var nextState = void 0;
 	
-	      // Shallow copy.
-	      var newItem = Object.assign({}, this.state.items[index], { left: left, top: top });
-	      console.log(newItem);
-	      var items = [];
+	      // Check if we need to re-order.
+	      if (index === items.length - 1) {
+	        nextState = (0, _reactAddonsUpdate2.default)(this.state, {
+	          items: _defineProperty({}, index, {
+	            left: { $set: left },
+	            top: { $set: top }
+	          })
+	        });
+	      } else {
+	        nextState = (0, _reactAddonsUpdate2.default)(this.state, {
+	          items: {
+	            $set: items.slice(0, index).concat(items.slice(index + 1), newItem)
+	          }
+	        });
+	      }
 	
-	      // Copy over items, ignoring the moved item and appending it last.
-	      this.state.items.forEach(function (item) {
-	        if (item.id !== newItem.id) {
-	          items.push(item);
-	        }
-	      });
-	      items.push(newItem);
-	
-	      this.setState({ items: items });
-	      console.log(this.state.items);
+	      this.setState(nextState);
 	    }
 	  }, {
 	    key: 'renderItem',
@@ -203,7 +238,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _props = this.props,
 	          connectDropTarget = _props.connectDropTarget,
 	          height = _props.height,
-	          width = _props.width;
+	          width = _props.width,
+	          snap = _props.snap,
+	          interval = _props.interval,
+	          lineWidth = _props.lineWidth,
+	          color = _props.color,
+	          showGrid = _props.showGrid;
+	
+	
+	      var gridProps = { interval: interval, color: color, lineWidth: lineWidth, snap: snap, width: width, height: height };
+	
 	      var items = this.state.items;
 	
 	
@@ -211,9 +255,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return connectDropTarget(_react2.default.createElement(
 	        'div',
 	        { style: style },
-	        items.map(function (item) {
-	          return _this2.renderItem(item);
-	        })
+	        showGrid && _react2.default.createElement(_RenderedGrid2.default, gridProps),
+	        _react2.default.createElement(
+	          'div',
+	          null,
+	          items.map(function (item) {
+	            return _this2.renderItem(item);
+	          })
+	        ),
+	        _react2.default.createElement(_GridDragLayer2.default, gridProps)
 	      ));
 	    }
 	  }]);
@@ -223,14 +273,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	Grid.propTypes = {
 	  connectDropTarget: _propTypes2.default.func.isRequired,
-	  // snapToGrid: PropTypes.bool.isRequired,
+	  snap: _propTypes2.default.bool,
+	  showGrid: _propTypes2.default.bool,
 	  width: _propTypes2.default.number.isRequired,
 	  height: _propTypes2.default.number.isRequired,
 	  interval: _propTypes2.default.number.isRequired,
-	  // gridOnTop: PropTypes.bool.isRequired,
-	  // lineWidth: PropTypes.number.isRequired,
-	  // gridColor: PropTypes.string.isRequired,
+	  lineWidth: _propTypes2.default.number,
+	  color: _propTypes2.default.string,
 	  children: _propTypes2.default.node
+	};
+	
+	Grid.defaultProps = {
+	  showGrid: true,
+	  snap: false,
+	  width: 500,
+	  height: 500,
+	  interval: 50,
+	  lineWidth: 1,
+	  color: "black"
 	};
 	
 	exports.default = (0, _reactDnd.DropTarget)(_ItemTypes2.default.Draggable, draggableTarget, function (connect) {
@@ -11745,6 +11805,178 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 178 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-present, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+	
+	'use strict';
+	
+	var _assign = __webpack_require__(5);
+	var invariant = __webpack_require__(13);
+	var hasOwnProperty = {}.hasOwnProperty;
+	
+	function shallowCopy(x) {
+	  if (Array.isArray(x)) {
+	    return x.concat();
+	  } else if (x && typeof x === 'object') {
+	    return _assign(new x.constructor(), x);
+	  } else {
+	    return x;
+	  }
+	}
+	
+	var COMMAND_PUSH = '$push';
+	var COMMAND_UNSHIFT = '$unshift';
+	var COMMAND_SPLICE = '$splice';
+	var COMMAND_SET = '$set';
+	var COMMAND_MERGE = '$merge';
+	var COMMAND_APPLY = '$apply';
+	
+	var ALL_COMMANDS_LIST = [
+	  COMMAND_PUSH,
+	  COMMAND_UNSHIFT,
+	  COMMAND_SPLICE,
+	  COMMAND_SET,
+	  COMMAND_MERGE,
+	  COMMAND_APPLY
+	];
+	
+	var ALL_COMMANDS_SET = {};
+	
+	ALL_COMMANDS_LIST.forEach(function(command) {
+	  ALL_COMMANDS_SET[command] = true;
+	});
+	
+	function invariantArrayCase(value, spec, command) {
+	  invariant(
+	    Array.isArray(value),
+	    'update(): expected target of %s to be an array; got %s.',
+	    command,
+	    value
+	  );
+	  var specValue = spec[command];
+	  invariant(
+	    Array.isArray(specValue),
+	    'update(): expected spec of %s to be an array; got %s. ' +
+	      'Did you forget to wrap your parameter in an array?',
+	    command,
+	    specValue
+	  );
+	}
+	
+	/**
+	 * Returns a updated shallow copy of an object without mutating the original.
+	 * See https://facebook.github.io/react/docs/update.html for details.
+	 */
+	function update(value, spec) {
+	  invariant(
+	    typeof spec === 'object',
+	    'update(): You provided a key path to update() that did not contain one ' +
+	      'of %s. Did you forget to include {%s: ...}?',
+	    ALL_COMMANDS_LIST.join(', '),
+	    COMMAND_SET
+	  );
+	
+	  if (hasOwnProperty.call(spec, COMMAND_SET)) {
+	    invariant(
+	      Object.keys(spec).length === 1,
+	      'Cannot have more than one key in an object with %s',
+	      COMMAND_SET
+	    );
+	
+	    return spec[COMMAND_SET];
+	  }
+	
+	  var nextValue = shallowCopy(value);
+	
+	  if (hasOwnProperty.call(spec, COMMAND_MERGE)) {
+	    var mergeObj = spec[COMMAND_MERGE];
+	    invariant(
+	      mergeObj && typeof mergeObj === 'object',
+	      "update(): %s expects a spec of type 'object'; got %s",
+	      COMMAND_MERGE,
+	      mergeObj
+	    );
+	    invariant(
+	      nextValue && typeof nextValue === 'object',
+	      "update(): %s expects a target of type 'object'; got %s",
+	      COMMAND_MERGE,
+	      nextValue
+	    );
+	    _assign(nextValue, spec[COMMAND_MERGE]);
+	  }
+	
+	  if (hasOwnProperty.call(spec, COMMAND_PUSH)) {
+	    invariantArrayCase(value, spec, COMMAND_PUSH);
+	    spec[COMMAND_PUSH].forEach(function(item) {
+	      nextValue.push(item);
+	    });
+	  }
+	
+	  if (hasOwnProperty.call(spec, COMMAND_UNSHIFT)) {
+	    invariantArrayCase(value, spec, COMMAND_UNSHIFT);
+	    spec[COMMAND_UNSHIFT].forEach(function(item) {
+	      nextValue.unshift(item);
+	    });
+	  }
+	
+	  if (hasOwnProperty.call(spec, COMMAND_SPLICE)) {
+	    invariant(
+	      Array.isArray(value),
+	      'Expected %s target to be an array; got %s',
+	      COMMAND_SPLICE,
+	      value
+	    );
+	    invariant(
+	      Array.isArray(spec[COMMAND_SPLICE]),
+	      'update(): expected spec of %s to be an array of arrays; got %s. ' +
+	        'Did you forget to wrap your parameters in an array?',
+	      COMMAND_SPLICE,
+	      spec[COMMAND_SPLICE]
+	    );
+	    spec[COMMAND_SPLICE].forEach(function(args) {
+	      invariant(
+	        Array.isArray(args),
+	        'update(): expected spec of %s to be an array of arrays; got %s. ' +
+	          'Did you forget to wrap your parameters in an array?',
+	        COMMAND_SPLICE,
+	        spec[COMMAND_SPLICE]
+	      );
+	      nextValue.splice.apply(nextValue, args);
+	    });
+	  }
+	
+	  if (hasOwnProperty.call(spec, COMMAND_APPLY)) {
+	    invariant(
+	      typeof spec[COMMAND_APPLY] === 'function',
+	      'update(): expected spec of %s to be a function; got %s.',
+	      COMMAND_APPLY,
+	      spec[COMMAND_APPLY]
+	    );
+	    nextValue = spec[COMMAND_APPLY](nextValue);
+	  }
+	
+	  for (var k in spec) {
+	    if (!(ALL_COMMANDS_SET.hasOwnProperty(k) && ALL_COMMANDS_SET[k])) {
+	      nextValue[k] = update(value[k], spec[k]);
+	    }
+	  }
+	
+	  return nextValue;
+	}
+	
+	module.exports = update;
+
+
+/***/ }),
+/* 179 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -11757,7 +11989,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ }),
-/* 179 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11778,9 +12010,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _reactDnd = __webpack_require__(40);
 	
-	var _reactDndHtml5Backend = __webpack_require__(180);
+	var _reactDndHtml5Backend = __webpack_require__(181);
 	
-	var _ItemTypes = __webpack_require__(178);
+	var _ItemTypes = __webpack_require__(179);
 	
 	var _ItemTypes2 = _interopRequireDefault(_ItemTypes);
 	
@@ -11790,7 +12022,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Wrapper for components for use with the Grid Component.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Used internally.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               */
 	
 	var draggableSource = {
 	  beginDrag: function beginDrag(props) {
@@ -11841,7 +12076,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	          children = _props.children,
 	          connectDragSource = _props.connectDragSource;
 	
-	
 	      return connectDragSource(_react2.default.createElement(
 	        'div',
 	        { style: getStyles(this.props) },
@@ -11872,7 +12106,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	})(Draggable);
 
 /***/ }),
-/* 180 */
+/* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11883,15 +12117,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.getEmptyImage = exports.NativeTypes = undefined;
 	exports.default = createHTML5Backend;
 	
-	var _HTML5Backend = __webpack_require__(181);
+	var _HTML5Backend = __webpack_require__(182);
 	
 	var _HTML5Backend2 = _interopRequireDefault(_HTML5Backend);
 	
-	var _getEmptyImage = __webpack_require__(211);
+	var _getEmptyImage = __webpack_require__(212);
 	
 	var _getEmptyImage2 = _interopRequireDefault(_getEmptyImage);
 	
-	var _NativeTypes = __webpack_require__(210);
+	var _NativeTypes = __webpack_require__(211);
 	
 	var NativeTypes = _interopRequireWildcard(_NativeTypes);
 	
@@ -11906,7 +12140,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ }),
-/* 181 */
+/* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11917,25 +12151,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _defaults = __webpack_require__(182);
+	var _defaults = __webpack_require__(183);
 	
 	var _defaults2 = _interopRequireDefault(_defaults);
 	
-	var _shallowEqual = __webpack_require__(202);
+	var _shallowEqual = __webpack_require__(203);
 	
 	var _shallowEqual2 = _interopRequireDefault(_shallowEqual);
 	
-	var _EnterLeaveCounter = __webpack_require__(203);
+	var _EnterLeaveCounter = __webpack_require__(204);
 	
 	var _EnterLeaveCounter2 = _interopRequireDefault(_EnterLeaveCounter);
 	
-	var _BrowserDetector = __webpack_require__(205);
+	var _BrowserDetector = __webpack_require__(206);
 	
-	var _OffsetUtils = __webpack_require__(207);
+	var _OffsetUtils = __webpack_require__(208);
 	
-	var _NativeDragSources = __webpack_require__(209);
+	var _NativeDragSources = __webpack_require__(210);
 	
-	var _NativeTypes = __webpack_require__(210);
+	var _NativeTypes = __webpack_require__(211);
 	
 	var NativeTypes = _interopRequireWildcard(_NativeTypes);
 	
@@ -12562,13 +12796,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = HTML5Backend;
 
 /***/ }),
-/* 182 */
+/* 183 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var apply = __webpack_require__(115),
-	    assignInWith = __webpack_require__(183),
+	    assignInWith = __webpack_require__(184),
 	    baseRest = __webpack_require__(112),
-	    customDefaultsAssignIn = __webpack_require__(201);
+	    customDefaultsAssignIn = __webpack_require__(202);
 	
 	/**
 	 * Assigns own and inherited enumerable string keyed properties of source
@@ -12600,12 +12834,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 183 */
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var copyObject = __webpack_require__(184),
-	    createAssigner = __webpack_require__(187),
-	    keysIn = __webpack_require__(190);
+	var copyObject = __webpack_require__(185),
+	    createAssigner = __webpack_require__(188),
+	    keysIn = __webpack_require__(191);
 	
 	/**
 	 * This method is like `_.assignIn` except that it accepts `customizer`
@@ -12644,11 +12878,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 184 */
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var assignValue = __webpack_require__(185),
-	    baseAssignValue = __webpack_require__(186);
+	var assignValue = __webpack_require__(186),
+	    baseAssignValue = __webpack_require__(187);
 	
 	/**
 	 * Copies properties of `source` to `object`.
@@ -12690,10 +12924,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 185 */
+/* 186 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var baseAssignValue = __webpack_require__(186),
+	var baseAssignValue = __webpack_require__(187),
 	    eq = __webpack_require__(90);
 	
 	/** Used for built-in method references. */
@@ -12724,7 +12958,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 186 */
+/* 187 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var defineProperty = __webpack_require__(119);
@@ -12755,11 +12989,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 187 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var baseRest = __webpack_require__(112),
-	    isIterateeCall = __webpack_require__(188);
+	    isIterateeCall = __webpack_require__(189);
 	
 	/**
 	 * Creates a function like `_.assign`.
@@ -12798,12 +13032,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 188 */
+/* 189 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var eq = __webpack_require__(90),
 	    isArrayLike = __webpack_require__(122),
-	    isIndex = __webpack_require__(189),
+	    isIndex = __webpack_require__(190),
 	    isObject = __webpack_require__(64);
 	
 	/**
@@ -12834,7 +13068,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 189 */
+/* 190 */
 /***/ (function(module, exports) {
 
 	/** Used as references for various `Number` constants. */
@@ -12862,11 +13096,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 190 */
+/* 191 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var arrayLikeKeys = __webpack_require__(191),
-	    baseKeysIn = __webpack_require__(198),
+	var arrayLikeKeys = __webpack_require__(192),
+	    baseKeysIn = __webpack_require__(199),
 	    isArrayLike = __webpack_require__(122);
 	
 	/**
@@ -12900,15 +13134,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 191 */
+/* 192 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var baseTimes = __webpack_require__(192),
+	var baseTimes = __webpack_require__(193),
 	    isArguments = __webpack_require__(133),
 	    isArray = __webpack_require__(63),
-	    isBuffer = __webpack_require__(193),
-	    isIndex = __webpack_require__(189),
-	    isTypedArray = __webpack_require__(195);
+	    isBuffer = __webpack_require__(194),
+	    isIndex = __webpack_require__(190),
+	    isTypedArray = __webpack_require__(196);
 	
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -12955,7 +13189,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 192 */
+/* 193 */
 /***/ (function(module, exports) {
 
 	/**
@@ -12981,11 +13215,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 193 */
+/* 194 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {var root = __webpack_require__(48),
-	    stubFalse = __webpack_require__(194);
+	    stubFalse = __webpack_require__(195);
 	
 	/** Detect free variable `exports`. */
 	var freeExports = typeof exports == 'object' && exports && !exports.nodeType && exports;
@@ -13026,7 +13260,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(57)(module)))
 
 /***/ }),
-/* 194 */
+/* 195 */
 /***/ (function(module, exports) {
 
 	/**
@@ -13050,12 +13284,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 195 */
+/* 196 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var baseIsTypedArray = __webpack_require__(196),
+	var baseIsTypedArray = __webpack_require__(197),
 	    baseUnary = __webpack_require__(110),
-	    nodeUtil = __webpack_require__(197);
+	    nodeUtil = __webpack_require__(198);
 	
 	/* Node.js helper references. */
 	var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
@@ -13083,7 +13317,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 196 */
+/* 197 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var baseGetTag = __webpack_require__(46),
@@ -13149,7 +13383,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 197 */
+/* 198 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(module) {var freeGlobal = __webpack_require__(49);
@@ -13178,12 +13412,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(57)(module)))
 
 /***/ }),
-/* 198 */
+/* 199 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var isObject = __webpack_require__(64),
-	    isPrototype = __webpack_require__(199),
-	    nativeKeysIn = __webpack_require__(200);
+	    isPrototype = __webpack_require__(200),
+	    nativeKeysIn = __webpack_require__(201);
 	
 	/** Used for built-in method references. */
 	var objectProto = Object.prototype;
@@ -13217,7 +13451,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 199 */
+/* 200 */
 /***/ (function(module, exports) {
 
 	/** Used for built-in method references. */
@@ -13241,7 +13475,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 200 */
+/* 201 */
 /***/ (function(module, exports) {
 
 	/**
@@ -13267,7 +13501,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 201 */
+/* 202 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var eq = __webpack_require__(90);
@@ -13302,7 +13536,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 202 */
+/* 203 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -13342,7 +13576,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ }),
-/* 203 */
+/* 204 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13353,7 +13587,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _union = __webpack_require__(204);
+	var _union = __webpack_require__(205);
 	
 	var _union2 = _interopRequireDefault(_union);
 	
@@ -13409,7 +13643,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = EnterLeaveCounter;
 
 /***/ }),
-/* 204 */
+/* 205 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var baseFlatten = __webpack_require__(130),
@@ -13441,7 +13675,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 205 */
+/* 206 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13451,7 +13685,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.isSafari = exports.isFirefox = undefined;
 	
-	var _memoize = __webpack_require__(206);
+	var _memoize = __webpack_require__(207);
 	
 	var _memoize2 = _interopRequireDefault(_memoize);
 	
@@ -13466,7 +13700,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 /***/ }),
-/* 206 */
+/* 207 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var MapCache = __webpack_require__(70);
@@ -13545,7 +13779,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 207 */
+/* 208 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13557,9 +13791,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.getEventClientOffset = getEventClientOffset;
 	exports.getDragPreviewOffset = getDragPreviewOffset;
 	
-	var _BrowserDetector = __webpack_require__(205);
+	var _BrowserDetector = __webpack_require__(206);
 	
-	var _MonotonicInterpolant = __webpack_require__(208);
+	var _MonotonicInterpolant = __webpack_require__(209);
 	
 	var _MonotonicInterpolant2 = _interopRequireDefault(_MonotonicInterpolant);
 	
@@ -13647,7 +13881,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ }),
-/* 208 */
+/* 209 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -13775,7 +14009,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.default = MonotonicInterpolant;
 
 /***/ }),
-/* 209 */
+/* 210 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13791,7 +14025,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.createNativeDragSource = createNativeDragSource;
 	exports.matchNativeItemType = matchNativeItemType;
 	
-	var _NativeTypes = __webpack_require__(210);
+	var _NativeTypes = __webpack_require__(211);
 	
 	var NativeTypes = _interopRequireWildcard(_NativeTypes);
 	
@@ -13895,7 +14129,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ }),
-/* 210 */
+/* 211 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -13908,7 +14142,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var TEXT = exports.TEXT = '__NATIVE_TEXT__';
 
 /***/ }),
-/* 211 */
+/* 212 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -13928,21 +14162,341 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ }),
-/* 212 */
+/* 213 */
 /***/ (function(module, exports) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.normalize = normalize;
 	exports.default = snapToGrid;
-	function snapToGrid(x, y, dim) {
-	  var snappedX = Math.round(x / dim) * dim;
-	  var snappedY = Math.round(y / dim) * dim;
+	/*
+	  Helper for coercing placement to match grid lines.
+	  The maxing and mining prevents snapping off the grid.
+	*/
 	
+	function normalize(x, y, props) {
+	  console.log('in', x, y, props);
+	  var width = props.width,
+	      height = props.height,
+	      interval = props.interval,
+	      lineWidth = props.lineWidth;
+	
+	  var offset = Math.floor(lineWidth / 2);
+	  var normalX = Math.max(offset, Math.min(x, width - interval));
+	  var normalY = Math.max(offset, Math.min(y, height - interval));
+	  return [normalX, normalY];
+	}
+	
+	function snapToGrid(x, y, props) {
+	  var interval = props.interval,
+	      lineWidth = props.lineWidth;
+	
+	  var offset = Math.floor(lineWidth / 2);
+	  var snappedX = Math.round(x / interval) * interval + offset;
+	  var snappedY = Math.round(y / interval) * interval + offset;
 	  return [snappedX, snappedY];
 	}
+
+/***/ }),
+/* 214 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }(); /*
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           Component for rendering an item as it is dragged. For internal use.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         */
+	
+	var _react = __webpack_require__(2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _propTypes = __webpack_require__(38);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	var _reactDnd = __webpack_require__(40);
+	
+	var _ItemTypes = __webpack_require__(179);
+	
+	var _ItemTypes2 = _interopRequireDefault(_ItemTypes);
+	
+	var _snapToGrid3 = __webpack_require__(213);
+	
+	var _snapToGrid4 = _interopRequireDefault(_snapToGrid3);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var layerStyles = {
+	  position: 'fixed',
+	  pointerEvents: 'none',
+	  zIndex: 100,
+	  left: 0,
+	  top: 0,
+	  width: '100%',
+	  height: '100%'
+	};
+	
+	function getItemStyles(props) {
+	  var initialOffset = props.initialOffset,
+	      currentOffset = props.currentOffset;
+	
+	  if (!initialOffset || !currentOffset) {
+	    return {
+	      displpay: 'none'
+	    };
+	  }
+	
+	  var x = currentOffset.x,
+	      y = currentOffset.y;
+	
+	
+	  if (props.snap) {
+	    x -= initialOffset.x;
+	    y -= initialOffset.y;
+	
+	    var _snapToGrid = (0, _snapToGrid4.default)(x, y, props);
+	
+	    var _snapToGrid2 = _slicedToArray(_snapToGrid, 2);
+	
+	    x = _snapToGrid2[0];
+	    y = _snapToGrid2[1];
+	
+	    x += initialOffset.x;
+	    y += initialOffset.y;
+	
+	    var _normalize = (0, _snapToGrid3.normalize)(x, y, props);
+	
+	    var _normalize2 = _slicedToArray(_normalize, 2);
+	
+	    x = _normalize2[0];
+	    y = _normalize2[1];
+	
+	    console.log('returned', x, y);
+	  }
+	
+	  var transform = 'translate(' + x + 'px, ' + y + 'px)';
+	  return {
+	    transform: transform,
+	    WebkitTransform: transform
+	  };
+	}
+	
+	var GridDragLayer = function (_PureComponent) {
+	  _inherits(GridDragLayer, _PureComponent);
+	
+	  function GridDragLayer() {
+	    _classCallCheck(this, GridDragLayer);
+	
+	    return _possibleConstructorReturn(this, (GridDragLayer.__proto__ || Object.getPrototypeOf(GridDragLayer)).apply(this, arguments));
+	  }
+	
+	  _createClass(GridDragLayer, [{
+	    key: 'renderItem',
+	    value: function renderItem(type, item) {
+	      switch (type) {
+	        case _ItemTypes2.default.Draggable:
+	          return item.children;
+	        default:
+	          return null;
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props,
+	          item = _props.item,
+	          itemType = _props.itemType,
+	          isDragging = _props.isDragging;
+	
+	
+	      if (!isDragging) {
+	        return null;
+	      }
+	
+	      return _react2.default.createElement(
+	        'div',
+	        { id: 'fooba', style: layerStyles },
+	        _react2.default.createElement(
+	          'div',
+	          { style: getItemStyles(this.props) },
+	          this.renderItem(itemType, item)
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return GridDragLayer;
+	}(_react.PureComponent);
+	
+	GridDragLayer.propTypes = {
+	  width: _propTypes2.default.number.isRequired,
+	  height: _propTypes2.default.number.isRequired,
+	  interval: _propTypes2.default.number.isRequired,
+	  lineWidth: _propTypes2.default.number.isRequired,
+	  item: _propTypes2.default.object,
+	  itemType: _propTypes2.default.string,
+	  initialOffset: _propTypes2.default.shape({
+	    x: _propTypes2.default.number.isRequired,
+	    y: _propTypes2.default.number.isRequired
+	  }),
+	  currentOffset: _propTypes2.default.shape({
+	    x: _propTypes2.default.number.isRequired,
+	    y: _propTypes2.default.number.isRequired
+	  }),
+	  isDragging: _propTypes2.default.bool.isRequired,
+	  snap: _propTypes2.default.bool
+	};
+	
+	exports.default = (0, _reactDnd.DragLayer)(function (monitor) {
+	  return {
+	    item: monitor.getItem(),
+	    itemType: monitor.getItemType(),
+	    initialOffset: monitor.getInitialSourceClientOffset(),
+	    currentOffset: monitor.getSourceClientOffset(),
+	    isDragging: monitor.isDragging()
+	  };
+	})(GridDragLayer);
+
+/***/ }),
+/* 215 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _propTypes = __webpack_require__(38);
+	
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Renders a cofigurable grid.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 Props:
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   width, height: Self-explanatory
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   lineWidth: width in pixels of the grid lines.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   color: Stroke color of the grid lines
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   interval: width/height of columns/rows.
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               */
+	
+	var DEFAULT_STYLE = {
+	  width: '100%',
+	  height: '100%',
+	  overflow: 'hidden'
+	};
+	
+	var RenderedGrid = function (_PureComponent) {
+	  _inherits(RenderedGrid, _PureComponent);
+	
+	  function RenderedGrid() {
+	    _classCallCheck(this, RenderedGrid);
+	
+	    return _possibleConstructorReturn(this, (RenderedGrid.__proto__ || Object.getPrototypeOf(RenderedGrid)).apply(this, arguments));
+	  }
+	
+	  _createClass(RenderedGrid, [{
+	    key: 'toStyle',
+	    value: function toStyle() {
+	      var _this2 = this;
+	
+	      var style = {};
+	
+	      //Validate Numeric Props
+	      ['height', 'width', 'lineWidth', 'interval'].forEach(function (parameter) {
+	        var value = _this2.props[parameter];
+	        if (value !== undefined) {
+	          var numeric = Number(value);
+	          if (!isNaN(numeric)) {
+	            style[parameter] = numeric;
+	          } else {
+	            throw new TypeError('Non-numeric value given for ' + parameter + ' prop.');
+	          }
+	        }
+	      });
+	
+	      var _props = this.props,
+	          color = _props.color,
+	          interval = _props.interval,
+	          lineWidth = _props.lineWidth;
+	
+	      //Validate Color Prop
+	
+	      if (this.props.color) {
+	        var dummy = document.createElement('div');
+	        dummy.style.color = this.props.color;
+	        if (!dummy.style.color) {
+	          //Then the color was rekected.
+	          throw new TypeError('Invalid color prop given.');
+	        }
+	      }
+	
+	      // Validate and set up gradient.
+	
+	      if (Number.isInteger(interval) && Number.isInteger(lineWidth)) {
+	        style.backgroundImage = 'linear-gradient(to right, ' + color + ' ' + lineWidth + 'px, ' + ('transparent ' + lineWidth + 'px), ') + ('linear-gradient(to bottom, ' + color + ' ' + lineWidth + 'px, ') + ('transparent ' + lineWidth + 'px)');
+	
+	        style.backgroundSize = interval + 'px ' + interval + 'px';
+	      } else {
+	        throw new TypeError('Invalid lineWidth or interval prop given.');
+	      }
+	
+	      return Object.assign({}, DEFAULT_STYLE, style);
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var gridStyle = this.toStyle();
+	
+	      return _react2.default.createElement('div', { style: gridStyle });
+	    }
+	  }]);
+	
+	  return RenderedGrid;
+	}(_react.PureComponent);
+	
+	RenderedGrid.propTypes = {
+	  color: _propTypes2.default.string.isRequired,
+	  lineWidth: _propTypes2.default.number.isRequired,
+	  interval: _propTypes2.default.number.isRequired
+	};
+	
+	RenderedGrid.defaultProps = {
+	  color: 'rgba(0,0,0,1)',
+	  lineWidth: 1,
+	  interval: 50
+	};
+	
+	exports.default = RenderedGrid;
 
 /***/ })
 /******/ ])

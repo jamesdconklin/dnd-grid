@@ -1,0 +1,4 @@
+Prevent Losing Elements outside of the grid
+Documentation
+Rejigger snap so we snap to nearest gridline and not left and top line.
+Synthesize 0-vector drags on click so clicking brings entry to front.

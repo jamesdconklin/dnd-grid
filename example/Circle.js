@@ -1,8 +1,6 @@
 import React from 'react';
 import update from 'react/lib/update';
 
-window.update = update;
-
 function getStyle(props) {
   const { radius, color } = props;
 

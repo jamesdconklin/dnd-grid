@@ -1,19 +1,20 @@
 /*
-  Renders a grid defined by provided width, height, interval, color,
-  and lineWidth props.
+  Renders a cofigurable grid.
 
-  Should render in front of the dropGrid and the draggableWrapper items,
-  but should be inert vis-a-vis any interactions.
+  Props:
+    width, height: Self-explanatory
+    lineWidth: width in pixels of the grid lines.
+    color: Stroke color of the grid lines
+    interval: width/height of columns/rows.
 */
 
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 
 const DEFAULT_STYLE = {
   width: '100%',
   height: '100%',
-  lineWidth: 1,
-  interval: 40,
-  color: 'rgba(0,0,0,1)',
+  overflow: 'hidden',
 };
 
 class RenderedGrid extends PureComponent {
@@ -37,34 +38,33 @@ class RenderedGrid extends PureComponent {
       }
     );
 
+    const { color, interval, lineWidth } = this.props;
+
     //Validate Color Prop
     if (this.props.color) {
       const dummy = document.createElement('div');
       dummy.style.color = this.props.color;
-      if (dummy.style.color) {
-        //Then the color was accepted.
-        style.color = this.props.color;
-      } else {
+      if (!dummy.style.color) {
+        //Then the color was rekected.
         throw new TypeError('Invalid color prop given.');
       }
     }
 
-    const mergedStyle = Object.assign({}, DEFAULT_STYLE, style);
+    // Validate and set up gradient.
 
-    const gradientDefinition =
-      `linear-gradient(to right, ${mergedStyle.color} ` +
-      `${mergedStyle.lineWidth}px, transparent ${mergedStyle.lineWidth}px),` +
-      `linear-gradient(to bottom, ${mergedStyle.color} ` +
-      `${mergedStyle.lineWidth}px, transparent ${mergedStyle.lineWidth}px)`;
+    if (Number.isInteger(interval) && Number.isInteger(lineWidth)) {
+      style.backgroundImage =
+        `linear-gradient(to right, ${color} ${lineWidth}px, ` +
+        `transparent ${lineWidth}px), ` +
+        `linear-gradient(to bottom, ${color} ${lineWidth}px, ` +
+        `transparent ${lineWidth}px)`;
 
-    return {
-      backgroundImage: gradientDefinition,
-      backgroundSize: `${mergedStyle.interval}px ${mergedStyle.interval}px`,
-      overflow: 'hidden',
-      width: mergedStyle.width,
-      height: mergedStyle.height,
-      position: 'absolute',
-    };
+      style.backgroundSize = `${interval}px ${interval}px`;
+    } else {
+      throw new TypeError('Invalid lineWidth or interval prop given.');
+    }
+
+    return Object.assign({}, DEFAULT_STYLE, style);
   }
 
   render() {
@@ -75,4 +75,17 @@ class RenderedGrid extends PureComponent {
     );
   }
 }
+
+RenderedGrid.propTypes = {
+  color: PropTypes.string.isRequired,
+  lineWidth: PropTypes.number.isRequired,
+  interval: PropTypes.number.isRequired,
+};
+
+RenderedGrid.defaultProps = {
+  color: 'rgba(0,0,0,1)',
+  lineWidth: 1,
+  interval: 50,
+};
+
 export default RenderedGrid;

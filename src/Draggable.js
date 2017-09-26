@@ -1,3 +1,8 @@
+/*
+  Wrapper for components for use with the Grid Component.
+  Used internally.
+*/
+
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { DragSource } from 'react-dnd';
@@ -32,7 +37,6 @@ class Draggable extends PureComponent {
 
   render() {
     const { children, connectDragSource } = this.props;
-
     return connectDragSource(
       <div style={getStyles(this.props)}>
         {children}
