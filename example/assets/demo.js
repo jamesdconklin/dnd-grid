@@ -31520,9 +31520,9 @@
 	
 				var _Draggable2 = _interopRequireDefault(_Draggable);
 	
-				var _snapToGrid3 = __webpack_require__(213);
+				var _snapToGrid = __webpack_require__(213);
 	
-				var _snapToGrid4 = _interopRequireDefault(_snapToGrid3);
+				var _snapToGrid2 = _interopRequireDefault(_snapToGrid);
 	
 				var _GridDragLayer = __webpack_require__(214);
 	
@@ -31562,6 +31562,16 @@
 					}subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } });if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
 				}
 	
+				function _toConsumableArray(arr) {
+					if (Array.isArray(arr)) {
+						for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+							arr2[i] = arr[i];
+						}return arr2;
+					} else {
+						return Array.from(arr);
+					}
+				}
+	
 				var baseStyles = {
 					position: 'relative',
 					overflow: 'hidden'
@@ -31580,12 +31590,12 @@
 						var mergedProps = Object.assign({}, Grid.defaultProps, props);
 	
 						if (mergedProps.snap) {
-							var _snapToGrid = (0, _snapToGrid4.default)(left, top, mergedProps);
+							var _normalize = _snapToGrid.normalize.apply(undefined, _toConsumableArray((0, _snapToGrid2.default)(left, top, mergedProps)).concat([mergedProps]));
 	
-							var _snapToGrid2 = _slicedToArray(_snapToGrid, 2);
+							var _normalize2 = _slicedToArray(_normalize, 2);
 	
-							left = _snapToGrid2[0];
-							top = _snapToGrid2[1];
+							left = _normalize2[0];
+							top = _normalize2[1];
 						}
 	
 						component.moveBox(item.id, left, top);

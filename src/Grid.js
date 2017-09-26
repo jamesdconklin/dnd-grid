@@ -16,7 +16,7 @@ import update from 'react-addons-update';
 
 import ItemTypes from 'ItemTypes';
 import Draggable from 'Draggable';
-import snapToGrid from 'snapToGrid';
+import snapToGrid, { normalize } from 'snapToGrid';
 import GridDragLayer from 'GridDragLayer';
 import RenderedGrid from 'RenderedGrid';
 
@@ -38,7 +38,7 @@ const draggableTarget = {
     const mergedProps = Object.assign({}, Grid.defaultProps, props);
 
     if (mergedProps.snap) {
-      [left, top] = snapToGrid(left, top, mergedProps);
+      [left, top] = normalize(...snapToGrid(left, top, mergedProps), mergedProps);
     }
 
     component.moveBox(item.id, left, top);
