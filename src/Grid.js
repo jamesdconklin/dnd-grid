@@ -7,7 +7,6 @@
     showGrid: include RendereGrid if true.
     snap: Snaps child components to nearest grid lines at component's
       left and top edges.
-
 */
 
 import React, { PureComponent } from 'react';
@@ -23,7 +22,6 @@ import RenderedGrid from 'RenderedGrid';
 
 const baseStyles = {
   position: 'relative',
-  border: '1px solid red',
   overflow: 'hidden',
 };
 
@@ -36,7 +34,7 @@ const draggableTarget = {
     let left = Math.round(item.left + delta.x);
     let top = Math.round(item.top + delta.y);
 
-    //This clalback is not automagically grabbing the default props.
+    //This callback is not automagically grabbing the default props.
     const mergedProps = Object.assign({}, Grid.defaultProps, props);
 
     if (mergedProps.snap) {

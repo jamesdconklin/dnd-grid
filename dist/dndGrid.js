@@ -89,7 +89,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             showGrid: include RendereGrid if true.
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             snap: Snaps child components to nearest grid lines at component's
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               left and top edges.
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         */
 	
 	var _react = __webpack_require__(2);
@@ -138,7 +137,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	var baseStyles = {
 	  position: 'relative',
-	  border: '1px solid red',
 	  overflow: 'hidden'
 	};
 	
@@ -151,7 +149,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var left = Math.round(item.left + delta.x);
 	    var top = Math.round(item.top + delta.y);
 	
-	    //This clalback is not automagically grabbing the default props.
+	    //This callback is not automagically grabbing the default props.
 	    var mergedProps = Object.assign({}, Grid.defaultProps, props);
 	
 	    if (mergedProps.snap) {

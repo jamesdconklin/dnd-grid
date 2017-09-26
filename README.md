@@ -15,7 +15,7 @@ that the last-dragged item is rendered on top, and rendering a configurable grid
  - Layer management - last moved is on top.
 
 ## Usage
-Source transpiles to `src/dndGrid.js`.
+Source transpiles to `dist/dndGrid.js`.
 
 Wrap components you wish to have as draggable elements on the grid as children of the `DndGrid` component. The initial order of components determines the initial ordering, with later children on top as normal.
 
